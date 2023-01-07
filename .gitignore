@@ -1,4 +1,11 @@
+.ipynb_checkpoints/
+
+.idea/
+
+__pycache__/
 
 features.csv/
 
 *.zip
+
+prepare_train.csv
