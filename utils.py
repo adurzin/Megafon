@@ -4,6 +4,9 @@ import pandas as pd
 from datetime import datetime
 from dask import dataframe
 
+import warnings
+warnings.filterwarnings('ignore')
+
 
 def prepare_train(data_path: str, feature_path: str):
     """Подготовка данных для работы модели"""
