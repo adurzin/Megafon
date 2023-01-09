@@ -1,18 +1,10 @@
-
 import numpy as np
 import pandas as pd
 from datetime import datetime
 from dask import dataframe
 
-import warnings
-warnings.filterwarnings('ignore')
-
-
-def prepare_train(data_path: str, feature_path: str):
+def prepare_train(data, feature_path: str):
     """Подготовка данных для работы модели"""
-
-    # загрузка данных
-    data = pd.read_csv(data_path, index_col='Unnamed: 0')
 
     # загрузка данных признаков"
     feats = dataframe.read_csv(feature_path, sep='\t')
@@ -20,7 +12,7 @@ def prepare_train(data_path: str, feature_path: str):
 
     # преобразование времени покупки в timestamp"
     data['buy_time'] = data.buy_time.apply(lambda x: datetime.fromtimestamp(x))
-    feats['buy_time'] = feats.buy_time.apply(lambda x: datetime.fromtimestamp(x))
+    feats['buy_time'] = feats.buy_time.apply(lambda x: datetime.fromtimestamp(x), meta=('buy_time', 'datetime64[ns]'))
 
     # объединение данных с признаками по id клиента
     df = feats.merge(data, on='id').compute()
@@ -50,11 +42,8 @@ def prepare_train(data_path: str, feature_path: str):
     return df
 
 
-def prepare_test(data_path: str, feature_path: str):
+def prepare_test(data, feature_path: str):
     """Подготовка данных для работы модели"""
-
-    # загрузка данных
-    data = pd.read_csv(data_path, index_col='Unnamed: 0')
 
     # загрузка данных признаков"
     feats = dataframe.read_csv(feature_path, sep='\t')
@@ -62,7 +51,7 @@ def prepare_test(data_path: str, feature_path: str):
 
     # преобразование времени покупки в timestamp"
     data['buy_time'] = data.buy_time.apply(lambda x: datetime.fromtimestamp(x))
-    feats['buy_time'] = feats.buy_time.apply(lambda x: datetime.fromtimestamp(x))
+    feats['buy_time'] = feats.buy_time.apply(lambda x: datetime.fromtimestamp(x), meta=('buy_time', 'datetime64[ns]'))
 
     # объединение данных с признаками по id клиента
     df = feats.merge(data, on='id').compute()
